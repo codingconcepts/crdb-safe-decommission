@@ -4,7 +4,9 @@ Explores some of the queries you can use to ensure a safe node decommission.
 
 ### Setup
 
-Start the first 3 nodes, wait for each to come up, then initialise the cluster. `/health` answers before `init`; `node status` doesn't, so it can't be the pre-init probe.
+Start the first 3 nodes, wait for each to come up, then initialise the first 3 nodes.
+
+Starting just the first 3 shows how system ranges prefer a replication factor (RF) of 5, regardless of node count.
 
 ```sh
 for i in 1 2 3; do
@@ -35,7 +37,7 @@ SET CLUSTER SETTING kv.rangefeed.enabled = true;
 SET CLUSTER SETTING kv.replication_reports.interval = '00:00:10';
 ```
 
-Show effective replication factors and observe that the default replication factor is 5 for the system tables, despite us having only started 3 of the nodes so far. This is expected.
+Show effective replication factors to see the RF=5 for the system tables. This is expected.
 
 ```sql
 SELECT

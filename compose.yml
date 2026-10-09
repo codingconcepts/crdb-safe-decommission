@@ -1,0 +1,72 @@
+services:
+
+  node1:
+    image: cockroachdb/cockroach:v26.3.0
+    hostname: node1
+    container_name: node1
+    command: start --insecure --join=node1,node2,node3 --locality=region=eu-west-1,zone=a --store=path=data,size=2GiB
+    networks:
+      - roach-net
+
+  node2:
+    image: cockroachdb/cockroach:v26.3.0
+    hostname: node2
+    container_name: node2
+    command: start --insecure --join=node1,node2,node3 --locality=region=eu-west-1,zone=b --store=path=data,size=2GiB
+    networks:
+      - roach-net
+
+  node3:
+    image: cockroachdb/cockroach:v26.3.0
+    hostname: node3
+    container_name: node3
+    command: start --insecure --join=node1,node2,node3 --locality=region=eu-west-1,zone=c --store=path=data,size=2GiB
+    networks:
+      - roach-net
+
+  node4:
+    image: cockroachdb/cockroach:v26.3.0
+    hostname: node4
+    container_name: node4
+    command: start --insecure --join=node1,node2,node3 --locality=region=eu-west-1,zone=a --store=path=data,size=2GiB
+    networks:
+      - roach-net
+
+  node5:
+    image: cockroachdb/cockroach:v26.3.0
+    hostname: node5
+    container_name: node5
+    command: start --insecure --join=node1,node2,node3 --locality=region=eu-west-1,zone=b --store=path=data,size=2GiB
+    networks:
+      - roach-net
+
+  sink:
+    build: ./sink
+    hostname: sink
+    container_name: sink
+    ports:
+      - 8081:8081
+    networks:
+      - roach-net
+
+  haproxy:
+    hostname: haproxy
+    image: timveil/dynamic-haproxy:latest
+    container_name: haproxy
+    ports:
+      - 26257:26257
+      - 8080:8080
+    environment:
+      - NODES=node1 node2 node3 node4 node5
+    links:
+      - node1
+      - node2
+      - node3
+      - node4
+      - node5
+    networks:
+      - roach-net
+
+networks:
+  roach-net:
+    driver: bridge

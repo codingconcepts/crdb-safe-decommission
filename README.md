@@ -4,7 +4,7 @@ Explores some of the queries you can use to ensure a safe node decommission.
 
 ### Setup
 
-Start the first 3 nodes, wait for each to come up, then initialise the first 3 nodes.
+Start the first 3 nodes in order, so their container names match their node IDs. Not essential but it'll make things easier to reason about later on. Wait for each of them to come up, then initialise the cluster.
 
 Starting just the first 3 shows how system ranges prefer a replication factor (RF) of 5, regardless of node count.
 

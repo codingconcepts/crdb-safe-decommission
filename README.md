@@ -29,6 +29,7 @@ docker exec -it node1 cockroach sql --insecure --set "prompt1=%/>"
 ```
 
 ```sql
+-- A bunch of the queries we'll be writing access crdb_internal, which requires this.
 SET allow_unsafe_internals = true;
 
 SET CLUSTER SETTING kv.rangefeed.enabled = true;
